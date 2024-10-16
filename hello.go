@@ -9,8 +9,9 @@ import "fmt"
 func main() {
 	var confrenceName = "Go Conference"
 	const confrenceTickets = 50
-	var remainingTickets = 50
-
+	var remainingTickets uint = 50
+	// define array
+	var bookings [50]string
 	//print type of variables
 	// fmt.Printf("confrenceTickets is %T ,remainingTickets is %T, confrenceName is %T\n", confrenceTickets, remainingTickets, confrenceName)
 	fmt.Printf("Welcome to our %v booking application\n", confrenceName)
@@ -21,9 +22,9 @@ func main() {
 	var firstName string
 	var lastName string
 	var email string
-	var userTickets int
+	var userTickets uint
 
-	// ask user for their name
+	// take user input
 	fmt.Println("Enter your first name:")
 	fmt.Scan(&firstName)
 	fmt.Println("Enter your last name:")
@@ -32,6 +33,14 @@ func main() {
 	fmt.Scan(&email)
 	fmt.Println("How many Ticket You want to book")
 	fmt.Scan(&userTickets)
+	remainingTickets = remainingTickets - userTickets
+	bookings[0] = firstName + " " + lastName
 
-	fmt.Printf("User %v has booked %v tickets.\n", firstName, userTickets)
+	// array opernation
+	fmt.Printf("The whole array: %v\n", bookings)
+	fmt.Printf("The first value: %v\n", bookings[0])
+	fmt.Printf("Array type: %T\n", bookings)
+	fmt.Printf("Array length: %v\n", len(bookings))
+	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, confrenceName)
 }
