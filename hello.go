@@ -11,7 +11,10 @@ func main() {
 	const confrenceTickets = 50
 	var remainingTickets uint = 50
 	// define array
-	var bookings [50]string
+	// var bookings [50]string
+
+	// slice
+	var bookings []string
 	//print type of variables
 	// fmt.Printf("confrenceTickets is %T ,remainingTickets is %T, confrenceName is %T\n", confrenceTickets, remainingTickets, confrenceName)
 	fmt.Printf("Welcome to our %v booking application\n", confrenceName)
@@ -34,12 +37,14 @@ func main() {
 	fmt.Println("How many Ticket You want to book")
 	fmt.Scan(&userTickets)
 	remainingTickets = remainingTickets - userTickets
-	bookings[0] = firstName + " " + lastName
+	// bookings[0] = firstName + " " + lastName
 
+	//put element in slice
+	bookings = append(bookings, firstName+" "+lastName)
 	// array opernation
-	fmt.Printf("The whole array: %v\n", bookings)
+	fmt.Printf("The whole slice: %v\n", bookings)
 	fmt.Printf("The first value: %v\n", bookings[0])
-	fmt.Printf("Array type: %T\n", bookings)
+	fmt.Printf("Slice type: %T\n", bookings)
 	fmt.Printf("Array length: %v\n", len(bookings))
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, confrenceName)
