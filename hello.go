@@ -27,6 +27,7 @@ func main() {
 
 	for {
 		// take user input
+		greetUsers()
 		fmt.Println("Enter your first name:")
 		fmt.Scan(&firstName)
 		fmt.Println("Enter your last name:")
@@ -79,17 +80,8 @@ func main() {
 
 	}
 
-	city := "London"
-	switch city {
-	case "New York":
-		// execute code for booking New York confrence Ticket
-	case "Singapore", "Hong Kong":
-		// execute code for booking Singapore & Hong Kong confrence Ticket
-	case "London", "Berlin":
-		// execute code for booking London & Berlin confrence Ticket
-	case "Mexico City":
-		// execute code for booking Mexico confrence Ticket
-	default:
-		fmt.Print("No valid city selected")
-	}
+}
+
+func greetUsers() {
+	fmt.Println("Welcome to our confrence")
 }
