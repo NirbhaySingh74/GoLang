@@ -36,32 +36,37 @@ func main() {
 		fmt.Println("How many Ticket You want to book")
 		fmt.Scan(&userTickets)
 
+		//validate the user input
+		isValidName := len(firstName) >= 2 && len(lastName) >= 2
+		isValidEmail := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
 		// check user enter more ticket than remaining ticket
-		if userTickets > remainingTickets {
-			fmt.Printf("we only have %v tickets remaining, so you can't book %v tickets\n", remainingTickets, userTickets)
-			break
+		if isValidName && isValidEmail && isValidTicketNumber {
+			remainingTickets = remainingTickets - userTickets
+			// bookings[0] = firstName + " " + lastName
+
+			//put element in slice
+			bookings = append(bookings, firstName+" "+lastName)
+
+			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, confrenceName)
+
+			// Logic to Extract the first name
+			firstNames := []string{}
+			for _, booking := range bookings {
+				var names = strings.Fields(booking)
+				firstNames = append(firstNames, names[0])
+			}
+			fmt.Printf("The first names of bookings are: %v\n", firstNames)
+
+			if remainingTickets == 0 {
+				// end program
+				fmt.Println("Our confrence is booked out. Come back next year.")
+				break
+			}
+		} else {
+			fmt.Println("Your input data is invalid, try again")
 		}
-		remainingTickets = remainingTickets - userTickets
-		// bookings[0] = firstName + " " + lastName
 
-		//put element in slice
-		bookings = append(bookings, firstName+" "+lastName)
-
-		fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
-		fmt.Printf("%v tickets remaining for %v\n", remainingTickets, confrenceName)
-
-		// Logic to Extract the first name
-		firstNames := []string{}
-		for _, booking := range bookings {
-			var names = strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
-		}
-		fmt.Printf("The first names of bookings are: %v\n", firstNames)
-
-		if remainingTickets == 0 {
-			// end program
-			fmt.Println("Our confrence is booked out. Come back next year.")
-			break
-		}
 	}
 }
