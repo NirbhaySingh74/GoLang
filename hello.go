@@ -3,6 +3,7 @@ package main
 import (
 	"example/hello/helper"
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -15,6 +16,7 @@ var userTickets uint
 var conferenceName = "Go Conference"
 var remainingTickets uint = 50
 var bookings = make([]UserData, 0)
+var wg sync.WaitGroup // WaitGroup to wait for goroutine completion
 
 type UserData struct {
 	firstName       string
@@ -26,53 +28,57 @@ type UserData struct {
 func main() {
 	greetUsers()
 
-	for {
-		// take user input
-		firstName, lastName, email, userTickets = getUserInput()
+	// take user input
+	firstName, lastName, email, userTickets = getUserInput()
 
-		// validate the user input
-		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
+	// validate the user input
+	isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
-		if isValidName && isValidEmail && isValidTicketNumber {
-			remainingTickets = remainingTickets - userTickets
+	if isValidName && isValidEmail && isValidTicketNumber {
+		remainingTickets = remainingTickets - userTickets
 
-			// create a struct for the user to store the data
-			var userData = UserData{
-				firstName:       firstName,
-				lastName:        lastName,
-				email:           email,
-				numberOfTickets: userTickets,
-			}
+		// create a struct for the user to store the data
+		var userData = UserData{
+			firstName:       firstName,
+			lastName:        lastName,
+			email:           email,
+			numberOfTickets: userTickets,
+		}
 
-			// add the user data to the bookings slice
-			bookings = append(bookings, userData)
+		// add the user data to the bookings slice
+		bookings = append(bookings, userData)
 
-			// print booking confirmation and remaining tickets
-			fmt.Printf("List of bookings: %v\n", bookings)
-			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
-			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+		// print booking confirmation and remaining tickets
+		fmt.Printf("List of bookings: %v\n", bookings)
+		fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+		fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
-			// send ticket
-			go sendTicket()
-			// call function to print first names of bookings
-			firstNames := getFirstNames()
-			fmt.Printf("The first names of bookings are: %v\n", firstNames)
+		// Add a waitgroup counter
+		wg.Add(1)
 
-			if remainingTickets == 0 {
-				// end the program when tickets are sold out
-				fmt.Println("Our conference is booked out. Come back next year.")
-				break
-			}
-		} else {
-			if !isValidName {
-				fmt.Println("First name or last name you entered is too short.")
-			}
-			if !isValidEmail {
-				fmt.Println("Email address you entered doesn't contain an '@' sign.")
-			}
-			if !isValidTicketNumber {
-				fmt.Println("The number of tickets you entered is invalid.")
-			}
+		// send ticket in a goroutine
+		go sendTicket()
+
+		// call function to print first names of bookings
+		firstNames := getFirstNames()
+		fmt.Printf("The first names of bookings are: %v\n", firstNames)
+
+		if remainingTickets == 0 {
+			// end the program when tickets are sold out
+			fmt.Println("Our conference is booked out. Come back next year.")
+		}
+
+		// Wait for goroutines to finish
+		wg.Wait()
+	} else {
+		if !isValidName {
+			fmt.Println("First name or last name you entered is too short.")
+		}
+		if !isValidEmail {
+			fmt.Println("Email address you entered doesn't contain an '@' sign.")
+		}
+		if !isValidTicketNumber {
+			fmt.Println("The number of tickets you entered is invalid.")
 		}
 	}
 }
@@ -105,9 +111,14 @@ func getUserInput() (string, string, string, uint) {
 }
 
 func sendTicket() {
+	// Simulate delay in sending the ticket
 	time.Sleep(10 * time.Second)
+
 	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
 	fmt.Println("############")
-	fmt.Printf("Sending ticket:\n %v \nto email address:\n %v", ticket, email)
+	fmt.Printf("Sending ticket:\n %v \nto email address:\n %v\n", ticket, email)
 	fmt.Println("############")
+
+	// Mark this goroutine as done
+	wg.Done()
 }
