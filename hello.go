@@ -3,6 +3,7 @@ package main
 import (
 	"example/hello/helper"
 	"fmt"
+	"time"
 )
 
 const conferenceTickets = 50
@@ -52,7 +53,7 @@ func main() {
 			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
 			// send ticket
-			sendTicket()
+			go sendTicket()
 			// call function to print first names of bookings
 			firstNames := getFirstNames()
 			fmt.Printf("The first names of bookings are: %v\n", firstNames)
@@ -104,6 +105,7 @@ func getUserInput() (string, string, string, uint) {
 }
 
 func sendTicket() {
+	time.Sleep(10 * time.Second)
 	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
 	fmt.Println("############")
 	fmt.Printf("Sending ticket:\n %v \nto email address:\n %v", ticket, email)
